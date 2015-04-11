@@ -1,0 +1,5 @@
+applications:
+- name: basic-vis
+  command: npm start
+services:
+   - owf-localhost

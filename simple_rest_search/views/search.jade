@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  #container
+  script(src="/javascripts/nodedump-client.js")
+  script(type='text/javascript').
+    var ppTable = nodedump(!{JSON.stringify(data)});
+    document.write(ppTable);
+    container = document.getElementById('container');
+    container.innterHTML = ppTable;

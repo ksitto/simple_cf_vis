@@ -1,0 +1,5 @@
+applications:
+- name: simple-rest-search
+  command: npm start
+  services:
+   - plugfest-elastic-1 

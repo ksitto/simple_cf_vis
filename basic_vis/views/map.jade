@@ -1,0 +1,50 @@
+extends layout
+
+block content
+  script(src="/javascripts/owf-widget-min.js")
+  script(src="/javascripts/jquery-2.1.1.js")
+  script(src="/javascripts/jquery.form.js")
+  script(src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCp8NhnVYeAtT30r-EQqHOfZwFU__XEasw")
+  script(type="text/javascript").
+    
+    OWF.relayFile = '#{owfUrl}/js/eventing/rpc_relay.uncompressed.html';
+    
+    var logger = OWF.Log.getDefaultLogger();
+    var appender = logger.getEffectiveAppenders()[0];
+    
+    appender.setThreshold(log4javascript.Level.INFO);
+    OWF.Log.setEnabled(false);
+
+    $(document).ready(function() {
+      OWF.ready(function() {
+        OWF.Eventing.subscribe("kevinsChannel", update);
+      });
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    });
+
+    function update(sender, msg) { 
+      point = $(msg).find("point").text().split(" ");
+      title = $(msg).find("title").text();   
+  
+      myLatlng = new google.maps.LatLng(point[0],point[1]);
+      marker = new google.maps.Marker({
+        title: title,
+        map:map,
+        animation: google.maps.Animation.DROP,
+        position: myLatlng
+      });
+
+      console.log("found point: " + point[0] + "," + point[1]); 
+    }
+    
+    var map;
+    function initialize() {
+      var mapOptions = {
+        zoom: 2,
+        center: new google.maps.LatLng(-34.397, 150.644)
+      };
+      map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    }
+  
+  div(id="map-canvas") 

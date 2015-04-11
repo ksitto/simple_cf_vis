@@ -1,0 +1,59 @@
+extends layout
+
+block content
+  script(src="/javascripts/owf-widget-min.js")
+  script(src="/javascripts/jquery-2.1.1.js")
+  script(src="/javascripts/jquery.form.js")
+  script(type="text/javascript").
+    
+    OWF.relayFile = '#{owfUrl}/js/eventing/rpc_relay.uncompressed.html';
+    
+    var logger = OWF.Log.getDefaultLogger();
+    var appender = logger.getEffectiveAppenders()[0];
+    
+    appender.setThreshold(log4javascript.Level.INFO);
+    OWF.Log.setEnabled(false);
+
+    function owfPublish(data) {
+      OWF.Eventing.publish("kevinsChannel",data); 
+    }
+
+    $(document).ready(function() {
+      
+      OWF.ready(function() {});
+
+      var options = {
+        success : processData
+      }
+      
+      $('#searchform').submit(function() {
+        $(this).ajaxSubmit(options);
+        return false;
+      });
+    })
+
+    function processData(responseText, statusText, xhr, $form) {
+      $(responseText).find("entry").each(function() {
+        textEntry = $(this).wrap('<entry></entry>').parent().html();
+        console.log(textEntry);
+        try {
+          owfPublish(textEntry);
+        }catch(e){
+          console.log("failed to publish to OWF: " + e)
+        }
+      });
+    }
+
+    
+  h1= title
+  form(id="searchform", name="searchform", action="https://simple-rest-search.cfapps.io/search")
+    Search Terms: 
+    input(id="q", name="q", type="text", value="hemisphere")
+    br
+    Result Format: 
+    select(id="format", name="format")
+        option(value="atom") atom
+        option(value="html") html
+    br
+    br
+    input(type="submit", value="submit query")

@@ -1,0 +1,15 @@
+{
+    "records": {
+        "record": [{
+            "keyword": "foo bar",
+            "date_updated": "2013-01-01T00:00:00-00:00",
+            "latitude": "0",
+            "longitude": "0"
+        }, {
+            "keyword": "baz bax",
+            "date_updated": "2013-02-01T00:00:00-00:00",
+            "latitude": "10",
+            "longitude": "-10"
+        }]
+    }
+}
